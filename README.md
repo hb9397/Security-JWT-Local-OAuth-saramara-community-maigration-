@@ -8,4 +8,17 @@
 6. gradle 파일에 JWT 의존성 추가
 7. 토큰의 생성과 토큰의 유효성 검사를 담당하는 jwt.TokenProvider 클래스 작성
 8. JWT 를 위한 Custom Filter 를 위해서 jwt.JwtFilter 작성
-9. TokenProvider, JwtFilter 를 SecurityConfig 에 적용할 때 사용할 jwt.JwtSecurityConfig 클래스 작성
+9. JwtFilter 를 이용해서 TokenProvider 를 SecurityConfig 에 적용할  때 사용할 jwt.JwtSecurityConfig 클래스 작성
+10. 유요한 자격증명을 제공하지 않고 접근할 때 401 에러를 반환하는 jwt.JwtAuthenticationEntryPoint 클래스 작성
+11. 필요한 권한이 존재하지 않는 경우에 403 Forbidden 에러를 반환하는 jwt.JwtAccessDeniedHandler 클래스 작성
+12. TokenProvider, JwtSecurityConfig, JwtFilter, JwtAuthenticationEntryPoint, JwtAccessDeniedHandler 를 config.SecurityConfig 에 적용
+13. 로그인 정보를 외부에서 가지고오는 데 사용할 member.LoginDto 클래스 작성
+14. 토큰 정보를 클라이언트에게 응답으로 주는 jwt.TokenDto 클래스 작성
+15. 클라이언트에서 회원가입에 접근했을 때 데이터를 가져올 member.UserDto 클래스 작성
+16. UserEntity를 이용해 DB에 실제 작업을 하는 메서드가 포함된 member.UserRepository 인터페이스 작성
+17. UserService 를 구현한 jwt.service.CustomUserDetailsService 클래스 작성
+18. 로그인 API를 위한 Auth.AuthConroller 작성
+19. Postman 으로 AuthConroller 에 Post 요청(Body-raw-json)
+20. SecurityContext 에 저장된 인증 정보중 username 을 가져오는  jwt.util.SecurityUtil 클래스 작성
+21. 회원가입, 유저정보 조회 등의 메서드를 가진 member.UserSerivice 클래스 작성
+PS Auth 패키지 member 패키지 
