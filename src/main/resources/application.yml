@@ -1,8 +1,10 @@
-spring:
+server:
+  port: 80
 
+spring:
   # DB ???? ??
   datasource:
-    url: jdbc:mariadb://localhost:3306/saramaraTest
+    url: jdbc:mariadb://localhost:3308/saramaraTest
     driver-class-name: org.mariadb.jdbc.Driver
     username: root
     password: 8236

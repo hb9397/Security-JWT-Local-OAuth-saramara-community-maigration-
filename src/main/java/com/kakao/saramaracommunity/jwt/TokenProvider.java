@@ -48,7 +48,7 @@ public class TokenProvider implements InitializingBean {
       this.key = Keys.hmacShaKeyFor(keyBytes);
    }
 
-   // Spring Security 의 Authentication  객체의 권한 정보를 이용해서 토큰을 생성하는 createToken 메서드
+   // Spring Security 의 Authentication 객체의 권한 정보를 이용해서 토큰을 생성하는 createToken 메서드
    public String createToken(Authentication authentication) { // Authentication 을 매개변수로 받아서
       // token 을 발급받기 위해 authentication 객체의 정보를 추출해서 권한정보 객체 authentication 객체를 생성
       String authorities = authentication.getAuthorities().stream()
