@@ -21,4 +21,9 @@
 19. Postman 으로 AuthConroller 에 Post 요청(Body-raw-json)
 20. SecurityContext 에 저장된 인증 정보중 username 을 가져오는  jwt.util.SecurityUtil 클래스 작성
 21. 회원가입, 유저정보 조회 등의 메서드를 가진 member.UserSerivice 클래스 작성
-PS Auth 패키지 member 패키지 
+22. PS Auth 패키지 member 패키지 합치기
+23. UserService 를 주입받아서 사용할 member.UserController 작성
+24. /api/signup 으로 POST 요청 (회원가입)
+25. /api/user, /user/{username} 로 권한이 다른 사용자 계정으로 요청을 보내서 권한에 따라 요청에 대한 응답이 적절한지 확인
+   - USER 권한을 가진 계정으로 Token을 발급받고 이를 Authriaztion 에 Bearer Token 에 넣어서 두 URL 에 GET 요청 후 확인
+   - ADMIN 권한을 가진 계정으로 Token을 발급받고 이를 Authriaztion 에 Bearer Token 에 넣어서 두 URL 에 GET 요청 후 확인
