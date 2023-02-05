@@ -5,8 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
-@AllArgsConstructor
+/*@NoArgsConstructor
+@AllArgsConstructor*/
 @Builder
 @Getter
 public class DuplicateMemberException extends RuntimeException {
@@ -14,7 +14,7 @@ public class DuplicateMemberException extends RuntimeException {
     public String message;
     public Throwable cause;
 
-    /*public DuplicateMemberException() {
+    public DuplicateMemberException() {
         super();
     }
     public DuplicateMemberException(String message, Throwable cause) {
@@ -25,5 +25,5 @@ public class DuplicateMemberException extends RuntimeException {
     }
     public DuplicateMemberException(Throwable cause) {
         super(cause);
-    }*/
+    }
 }

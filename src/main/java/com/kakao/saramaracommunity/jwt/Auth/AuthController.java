@@ -34,6 +34,9 @@ public class AuthController {
     // AuthenticationManagerBuilder 주입
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
+    // TokenDto 주입
+    // private final TokenDto jwt;
+
     /*public AuthController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder) {
         this.tokenProvider = tokenProvider;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
@@ -57,16 +60,17 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // Authentication 객체를 이용해서 jwt 값을 생성
-        String jwt = tokenProvider.createToken(authentication);
+        // String jwt = tokenProvider.createToken(authentication);
+        TokenDto jwt = tokenProvider.createToken(authentication);
 
         // HttpHeaders 객체를 생성하고
         HttpHeaders httpHeaders = new HttpHeaders();
         // HttpHeaders 객체에 JwtFilter 에 작성한 헤더의 이름과 jwt 를 넣어주고
-        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt.getAccessToken());
 
-        log.info(new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK));
+        log.info(new ResponseEntity<>(/*new TokenDto(jwt)*/ jwt, httpHeaders, HttpStatus.OK));
 
         // ResponseEntity 를 이용해 Response 의 Body 에 TokenDto 를 이용해 jwt 를 넣어주고 jwt를 가지고 있는 httpHeaders 와 HttpStatus.OK 를 반환
-        return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(/*new TokenDto(jwt)*/ jwt, httpHeaders, HttpStatus.OK);
     }
 }

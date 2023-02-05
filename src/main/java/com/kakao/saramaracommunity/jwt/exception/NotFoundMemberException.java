@@ -4,13 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
-@AllArgsConstructor
+/*@NoArgsConstructor
+@AllArgsConstructor*/
 @Builder
 public class NotFoundMemberException extends RuntimeException {
     public String message;
     public Throwable cause;
-   /* public NotFoundMemberException() {
+    public NotFoundMemberException() {
         super();
     }
     public NotFoundMemberException(String message, Throwable cause) {
@@ -21,5 +21,5 @@ public class NotFoundMemberException extends RuntimeException {
     }
     public NotFoundMemberException(Throwable cause) {
         super(cause);
-    }*/
+    }
 }

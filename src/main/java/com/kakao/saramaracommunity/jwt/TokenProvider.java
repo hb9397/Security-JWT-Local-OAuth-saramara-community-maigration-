@@ -49,7 +49,7 @@ public class TokenProvider implements InitializingBean {
    }
 
    // Spring Security 의 Authentication 객체의 권한 정보를 이용해서 토큰을 생성하는 createToken 메서드
-   public String createToken(Authentication authentication) { // Authentication 을 매개변수로 받아서
+   public TokenDto createToken(Authentication authentication) { // Authentication 을 매개변수로 받아서
       // token 을 발급받기 위해 authentication 객체의 정보를 추출해서 권한정보 객체 authentication 객체를 생성
       String authorities = authentication.getAuthorities().stream()
          .map(GrantedAuthority::getAuthority)
@@ -59,24 +59,52 @@ public class TokenProvider implements InitializingBean {
       long now = (new Date()).getTime();
       Date validity = new Date(now + this.tokenValidityInMilliseconds);
 
+      // Access Token 생성
+      String accessToken = Jwts.builder()
+              .setSubject(authentication.getName())
+              .claim(AUTHORITIES_KEY, authorities)
+              .setExpiration(validity)
+              .signWith(key, SignatureAlgorithm.HS256)
+              .compact();
+
+      // Refresh Token 생성
+      String refreshToken = Jwts.builder()
+              .setExpiration(new Date(now + 86400000))
+              .signWith(key, SignatureAlgorithm.HS256)
+              .compact();
+
       // JWT를 키, 알고리즘, 만료시간을 설정하고 생성해서 반환한다.
-      return Jwts.builder()
+      /*return Jwts.builder()
          .setSubject(authentication.getName())
          .claim(AUTHORITIES_KEY, authorities)
          .signWith(key, SignatureAlgorithm.HS512)
          .setExpiration(validity)
-         .compact();
+         .compact();*/
+
+      return TokenDto.builder()
+              .grantType("Bearer")
+              .accessToken(accessToken)
+              .refreshToken(refreshToken)
+              .build();
    }
 
    // Client로 부터 받은 token 의 정보를 이용해서 Authentication 객체를 반환하는 메서드
-   public Authentication getAuthentication(String token) {
+   public Authentication getAuthentication(String accessToken) {
+      // 토큰 복호화
       // JWTs 객체인 token을 Claims 객체로 만들어준다.
-      Claims claims = Jwts
+      Claims claims = Jwts.parserBuilder()
+              .setSigningKey(key)
+              .build()
+              .parseClaimsJws(accessToken)
+              .getBody();
+
+      // JWTs 객체인 token을 Claims 객체로 만들어준다.
+      /*Claims claims = Jwts
               .parserBuilder()
               .setSigningKey(key)
               .build()
               .parseClaimsJws(token)
-              .getBody();
+              .getBody();*/
 
       // 만들어진 Claims 객체를 이용해서 권한정보를 가지고 있는 GrantedAuthority 콜렉션 객체 생성
       Collection<? extends GrantedAuthority> authorities =
@@ -87,9 +115,12 @@ public class TokenProvider implements InitializingBean {
       // 만들어진 Claims 객체와 권한정보 객체를 이용해서 User 객체 생성
       User principal = new User(claims.getSubject(), "", authorities);
 
+      // UserDetails 객체를 만들어서 Authentication 리턴
+      // UserDetails principal = new User(claims.getSubject(), "", authorities);
+
       // 최종적으로 Token 을 이용해서 특정 사용자의 정보를 갖는 Authentication
       // 의 일종인 UsernamePasswordAuthenticationToken 객체 생성해서 반환
-      return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+      return new UsernamePasswordAuthenticationToken(principal, /*token*/ accessToken, authorities);
    }
 
 
@@ -110,5 +141,15 @@ public class TokenProvider implements InitializingBean {
          log.info("JWT 토큰이 잘못되었습니다.");
       }
       return false;
+   }
+
+
+   // 엑세스 토큰 검증 이전에 받아온 토큰을 복호화 하는 메서드
+   private Claims parseClaims(String accessToken) {
+      try {
+         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
+      } catch (ExpiredJwtException e) {
+         return e.getClaims();
+      }
    }
 }

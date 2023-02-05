@@ -58,7 +58,7 @@ public class UserService {
         return UserDto.from(userRepository.findOneWithAuthoritiesByUsername(username).orElse(null));
     }
 
-    // 현재 Security Context 에 저장된 username 의 정보만을 가져오는 메서드
+    // 현재 Security Context 에 저장된 username 의 사용자 정보, 권한정보 만을 가져오는 메서드
     @Transactional(readOnly = true)
     public UserDto getMyUserWithAuthorities() {
         return UserDto.from(
