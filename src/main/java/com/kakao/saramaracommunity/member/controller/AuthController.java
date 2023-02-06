@@ -1,9 +1,9 @@
-package com.kakao.saramaracommunity.jwt.Auth;
+package com.kakao.saramaracommunity.member.controller;
 
-import com.kakao.saramaracommunity.jwt.JwtFilter;
-import com.kakao.saramaracommunity.jwt.TokenDto;
-import com.kakao.saramaracommunity.jwt.TokenProvider;
-import com.kakao.saramaracommunity.member.LoginDto;
+import com.kakao.saramaracommunity.security.jwt.JwtFilter;
+import com.kakao.saramaracommunity.common.TokenDto;
+import com.kakao.saramaracommunity.security.jwt.TokenProvider;
+import com.kakao.saramaracommunity.member.dto.LoginDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 

@@ -1,9 +1,9 @@
 package com.kakao.saramaracommunity.config;
 
-import com.kakao.saramaracommunity.jwt.JwtAccessDeniedHandler;
-import com.kakao.saramaracommunity.jwt.JwtAuthenticationEntryPoint;
-import com.kakao.saramaracommunity.jwt.JwtSecurityConfig;
-import com.kakao.saramaracommunity.jwt.TokenProvider;
+import com.kakao.saramaracommunity.security.jwt.JwtAccessDeniedHandler;
+import com.kakao.saramaracommunity.security.jwt.JwtAuthenticationEntryPoint;
+import com.kakao.saramaracommunity.security.jwt.JwtSecurityConfig;
+import com.kakao.saramaracommunity.security.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.context.annotation.Bean;
@@ -53,6 +53,8 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+
+
         httpSecurity
                 // token을 사용하는 방식이기 때문에 csrf를 disable합니다.
                 .csrf().disable()

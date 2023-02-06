@@ -1,4 +1,4 @@
-package com.kakao.saramaracommunity.jwt;
+package com.kakao.saramaracommunity.security.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

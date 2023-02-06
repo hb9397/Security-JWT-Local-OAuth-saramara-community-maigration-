@@ -1,8 +1,8 @@
-package com.kakao.saramaracommunity.jwt.handler;
+package com.kakao.saramaracommunity.handler;
 
-import com.kakao.saramaracommunity.jwt.ErrorDto;
-import com.kakao.saramaracommunity.jwt.exception.DuplicateMemberException;
-import com.kakao.saramaracommunity.jwt.exception.NotFoundMemberException;
+import com.kakao.saramaracommunity.common.ErrorDto;
+import com.kakao.saramaracommunity.exception.DuplicateMemberException;
+import com.kakao.saramaracommunity.exception.NotFoundMemberException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

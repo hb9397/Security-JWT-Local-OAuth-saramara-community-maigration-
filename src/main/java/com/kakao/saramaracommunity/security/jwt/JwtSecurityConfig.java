@@ -1,4 +1,4 @@
-package com.kakao.saramaracommunity.jwt;
+package com.kakao.saramaracommunity.security.jwt;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;

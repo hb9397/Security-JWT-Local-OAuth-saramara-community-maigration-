@@ -1,6 +1,5 @@
-package com.kakao.saramaracommunity.member;
+package com.kakao.saramaracommunity.member.entity;
 
-import com.kakao.saramaracommunity.jwt.Auth.AuthorityEntity;
 import jakarta.persistence.*;
 import lombok.*;
 

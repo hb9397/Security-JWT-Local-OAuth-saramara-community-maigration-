@@ -1,5 +1,7 @@
-package com.kakao.saramaracommunity.member;
+package com.kakao.saramaracommunity.member.controller;
 
+import com.kakao.saramaracommunity.member.service.UserService;
+import com.kakao.saramaracommunity.member.dto.SignUpDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -32,8 +34,8 @@ public class UserController {
 
     // /signup 에 대한 POST 요청시 UserDto 를 매개변수로 받아서 UserService 의 signup() 메서드 호출하는 메서드
     @PostMapping("/signup")
-    public ResponseEntity<UserDto> signup(
-            @Valid @RequestBody UserDto userDto
+    public ResponseEntity<SignUpDto> signup(
+            @Valid @RequestBody SignUpDto userDto
     ) {
         return ResponseEntity.ok(userService.signup(userDto));
     }
@@ -42,7 +44,7 @@ public class UserController {
     // 사용자 자신의 정보를 확인 하는 메서드
     @GetMapping("/user")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public ResponseEntity<UserDto> getMyUserInfo(HttpServletRequest request) {
+    public ResponseEntity<SignUpDto> getMyUserInfo(HttpServletRequest request) {
         return ResponseEntity.ok(userService.getMyUserWithAuthorities());
     }
 
@@ -50,7 +52,7 @@ public class UserController {
     // 모든 사용자 이름으로 사용자의 정보를 조회할 수 있는 메서드
     @GetMapping("/user/{username}")
     @PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity<UserDto> getUserInfo(@PathVariable String username) {
+    public ResponseEntity<SignUpDto> getUserInfo(@PathVariable String username) {
         return ResponseEntity.ok(userService.getUserWithAuthorities(username));
     }
 }

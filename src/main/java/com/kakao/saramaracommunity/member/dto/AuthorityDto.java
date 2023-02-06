@@ -1,4 +1,4 @@
-package com.kakao.saramaracommunity.jwt.Auth;
+package com.kakao.saramaracommunity.member.dto;
 
 import lombok.*;
 

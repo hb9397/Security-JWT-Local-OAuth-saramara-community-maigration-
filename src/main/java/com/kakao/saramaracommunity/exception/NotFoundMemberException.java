@@ -1,4 +1,4 @@
-package com.kakao.saramaracommunity.jwt.exception;
+package com.kakao.saramaracommunity.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

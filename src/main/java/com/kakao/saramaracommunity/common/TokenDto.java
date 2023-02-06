@@ -1,4 +1,4 @@
-package com.kakao.saramaracommunity.jwt;
+package com.kakao.saramaracommunity.common;
 
 import lombok.*;
 

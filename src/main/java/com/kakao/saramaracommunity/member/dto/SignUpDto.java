@@ -1,7 +1,7 @@
-package com.kakao.saramaracommunity.member;
+package com.kakao.saramaracommunity.member.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kakao.saramaracommunity.jwt.Auth.AuthorityDto;
+import com.kakao.saramaracommunity.member.entity.UserEntity;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDto {
+public class SignUpDto {
 
    @NotNull
    @Size(min = 3, max = 50)
@@ -32,10 +32,10 @@ public class UserDto {
 
    private Set<AuthorityDto> authorityDtoSet;
 
-   public static UserDto from(UserEntity user) {
+   public static SignUpDto from(UserEntity user) {
       if(user == null) return null;
 
-      return UserDto.builder()
+      return SignUpDto.builder()
               .username(user.getUsername())
               .nickname(user.getNickname())
               .authorityDtoSet(user.getAuthorities().stream()

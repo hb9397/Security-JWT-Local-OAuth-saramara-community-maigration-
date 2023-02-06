@@ -1,4 +1,4 @@
-package com.kakao.saramaracommunity.member;
+package com.kakao.saramaracommunity.member.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

@@ -1,4 +1,4 @@
-package com.kakao.saramaracommunity.jwt.util;
+package com.kakao.saramaracommunity.util;
 
 import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;

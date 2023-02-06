@@ -1,4 +1,4 @@
-package com.kakao.saramaracommunity.jwt;
+package com.kakao.saramaracommunity.security.jwt;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

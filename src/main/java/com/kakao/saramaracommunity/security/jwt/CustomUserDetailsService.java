@@ -1,7 +1,7 @@
-package com.kakao.saramaracommunity.jwt.service;
+package com.kakao.saramaracommunity.security.jwt;
 
-import com.kakao.saramaracommunity.member.UserEntity;
-import com.kakao.saramaracommunity.member.UserRepository;
+import com.kakao.saramaracommunity.member.entity.UserEntity;
+import com.kakao.saramaracommunity.member.persistence.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.core.GrantedAuthority;
