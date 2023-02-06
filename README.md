@@ -16,7 +16,7 @@
 14. 토큰 정보를 클라이언트에게 응답으로 주는 jwt.TokenDto 클래스 작성
 15. 클라이언트에서 회원가입에 접근했을 때 데이터를 가져올 member.UserDto 클래스 작성
 16. UserEntity를 이용해 DB에 실제 작업을 하는 메서드가 포함된 member.UserRepository 인터페이스 작성
-17. UserService 를 구현한 jwt.service.CustomUserDetailsService 클래스 작성
+17. 2 를 구현한 jwt.service.CustomUserDetailsService 클래스 작성
 18. 로그인 API를 위한 Auth.AuthConroller 작성
 19. Postman 으로 AuthConroller 에 Post 요청(Body-raw-json)
 20. SecurityContext 에 저장된 인증 정보중 username 을 가져오는  jwt.util.SecurityUtil 클래스 작성

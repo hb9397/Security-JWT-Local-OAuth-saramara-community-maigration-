@@ -27,16 +27,22 @@ public class TokenProvider implements InitializingBean {
 
    private final String secret;
 
-   private final long tokenValidityInMilliseconds;
+   //private final long tokenValidityInMilliseconds;
+
+   private final long accessTokenValidityInMilliseconds;
+
+   private final long refreshTokenValidityInMilliseconds;
    private Key key;
 
 
 
    public TokenProvider(
       @Value("${jwt.secret}") String secret,
-      @Value("${jwt.token-validity-in-seconds}")long tokenValidityInSeconds) {
+      @Value("${jwt.access-token-validity-in-seconds}")long accesstokenValidityInSeconds,
+      @Value("${jwt.refresh-token-validity-in-seconds}") long refreshTokenValidityInMilliseconds) {
       this.secret = secret;
-      this.tokenValidityInMilliseconds = tokenValidityInSeconds * 1000;
+      this.accessTokenValidityInMilliseconds = accesstokenValidityInSeconds;
+      this.refreshTokenValidityInMilliseconds = refreshTokenValidityInMilliseconds;
    }
 
    // InitializingBean 을 implements 해서 afterPropertiesSet 를 재정의하는 이유는
@@ -47,7 +53,34 @@ public class TokenProvider implements InitializingBean {
       this.key = Keys.hmacShaKeyFor(keyBytes);
    }
 
-   // Spring Security 의 Authentication 객체의 권한 정보를 이용해서 토큰을 생성하는 createToken 메서드
+   // TODO: Access, Refresh Token Crete 메서드 수정
+   // Spring Security 의 Authentication 객체의 권한 정보를 이용해서 Access 토큰을 생성하는 createToken 메서드
+   public String createAccessToken(Authentication authentication){
+      // token 을 발급받기 위해 authentication 객체의 정보를 추출해서 권한정보 객체 authentication 객체를 생성
+      String authorities = authentication.getAuthorities().stream()
+              .map(GrantedAuthority::getAuthority)
+              .collect(Collectors.joining(","));
+
+      // token 의 만료시간을 만드는데 현재시간 + application.yaml 파일로 부터 주입 받은 만료시간 으로 생성
+      long now = (new Date()).getTime();
+      Date accessValidity = new Date(now + this.accessTokenValidityInMilliseconds);
+
+      // Access Token 생성
+      String accessToken = Jwts.builder()
+              .setSubject(authentication.getName())
+              .claim(AUTHORITIES_KEY, authorities)
+              .setExpiration(accessValidity)
+              .signWith(key, SignatureAlgorithm.HS256)
+              .compact();
+
+      return accessToken;
+   }
+
+   // Spring Security 의 Authentication 객체의 권한 정보를 이용해서 refresh 토큰을 생성하는 createToken 메서드
+   public String createRefreshToken(){
+
+   }
+
    public TokenDto createToken(Authentication authentication) { // Authentication 을 매개변수로 받아서
       // token 을 발급받기 위해 authentication 객체의 정보를 추출해서 권한정보 객체 authentication 객체를 생성
       String authorities = authentication.getAuthorities().stream()
@@ -56,19 +89,22 @@ public class TokenProvider implements InitializingBean {
 
       // token 의 만료시간을 만드는데 현재시간 + application.yaml 파일로 부터 주입 받은 만료시간 으로 생성
       long now = (new Date()).getTime();
-      Date validity = new Date(now + this.tokenValidityInMilliseconds);
+      //Date validity = new Date(now + this.tokenValidityInMilliseconds);
+      Date accessValidity = new Date(now + this.accessTokenValidityInMilliseconds);
+      Date refreshValidity = new Date(now + this.refreshTokenValidityInMilliseconds);
+
 
       // Access Token 생성
       String accessToken = Jwts.builder()
               .setSubject(authentication.getName())
               .claim(AUTHORITIES_KEY, authorities)
-              .setExpiration(validity)
+              .setExpiration(accessValidity)
               .signWith(key, SignatureAlgorithm.HS256)
               .compact();
 
       // Refresh Token 생성
       String refreshToken = Jwts.builder()
-              .setExpiration(new Date(now + 86400000))
+              .setExpiration(refreshValidity)
               .signWith(key, SignatureAlgorithm.HS256)
               .compact();
 

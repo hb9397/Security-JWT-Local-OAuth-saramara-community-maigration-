@@ -28,7 +28,8 @@ jwt:
   secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
   # 토큰 만료 시간
   token-validity-in-seconds: 86400
-
+  access-token-validity-in-seconds: 86400
+  refresh-token-validity-in-seconds: 604800
 logging:
   level:
     com.kakao.saramaracommunity : DEBUG
