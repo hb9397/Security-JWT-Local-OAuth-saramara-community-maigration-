@@ -54,7 +54,6 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 
-
         httpSecurity
                 // token을 사용하는 방식이기 때문에 csrf를 disable합니다.
                 .csrf().disable()
@@ -80,14 +79,20 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests() // HttpServletRequest 를 사용하는 요청에 대한 접근을 제한을 설정하기 위한 메서드
                 // 2가지 URL 에 대해서는 제한없이 허용하겠다는 메서드, 로그인, 회원가입 에는 토큰이 없는 상태로 접근하기 때문
-                .requestMatchers("/api/authenticate", "/api/signup").permitAll()
+                .requestMatchers("/api/authenticate", "/ouath2/**","/api/signup", "/api/login").permitAll()
                 //.requestMatchers(PathRequest.toH2Console()).permitAll()
                 // 위의 세가지 URL 을 제외한 요청에는 인증을 하겠다는 의미
-                .anyRequest().authenticated()
+                .anyRequest().authenticated();
 
-                .and()
+
+                // oauth 로그인 시 결과를 redirect 할 URI
+                httpSecurity.oauth2Login()
+                        .redirectionEndpoint()
+                        .baseUri("/oauth2/code/*");
+
+
                 // TokenProvider 를 시큐리티 로직에 등록하는 JwtFilter 를 addFilterBefore 메서드로 등록한 JwtSecurityConfig 적용
-                .apply(new JwtSecurityConfig(tokenProvider));
+                httpSecurity.apply(new JwtSecurityConfig(tokenProvider));
 
         return httpSecurity.build();
     }

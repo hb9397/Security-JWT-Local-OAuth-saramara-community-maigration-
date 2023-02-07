@@ -61,7 +61,7 @@ public class AuthController {
 
         // Authentication 객체를 이용해서 jwt 값을 생성
         // String jwt = tokenProvider.createToken(authentication);
-        TokenDto jwt = tokenProvider.createToken(authentication);
+        TokenDto jwt = tokenProvider.returnToken(authentication);
 
         // HttpHeaders 객체를 생성하고
         HttpHeaders httpHeaders = new HttpHeaders();

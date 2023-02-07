@@ -77,11 +77,38 @@ public class TokenProvider implements InitializingBean {
    }
 
    // Spring Security 의 Authentication 객체의 권한 정보를 이용해서 refresh 토큰을 생성하는 createToken 메서드
-   public String createRefreshToken(){
+   public String createRefreshToken(Authentication authentication){
+      // token 을 발급받기 위해 authentication 객체의 정보를 추출해서 권한정보 객체 authentication 객체를 생성
+      String authorities = authentication.getAuthorities().stream()
+              .map(GrantedAuthority::getAuthority)
+              .collect(Collectors.joining(","));
 
+      // token 의 만료시간을 만드는데 현재시간 + application.yaml 파일로 부터 주입 받은 만료시간 으로 생성
+      long now = (new Date()).getTime();
+      Date refreshValidity = new Date(now + this.refreshTokenValidityInMilliseconds);
+
+      // Refresh Token 생성
+      String refreshToken = Jwts.builder()
+              .setExpiration(refreshValidity)
+              .signWith(key, SignatureAlgorithm.HS256)
+              .compact();
+
+      return refreshToken;
    }
 
-   public TokenDto createToken(Authentication authentication) { // Authentication 을 매개변수로 받아서
+
+   public TokenDto returnToken(Authentication authentication){
+      String accessToken = createAccessToken(authentication);
+      String refreshToken = createRefreshToken(authentication);
+
+      return TokenDto.builder()
+              .grantType("Bearer")
+              .accessToken(accessToken)
+              .refreshToken(refreshToken)
+              .build();
+   }
+
+   /*public TokenDto createToken(Authentication authentication) { // Authentication 을 매개변수로 받아서
       // token 을 발급받기 위해 authentication 객체의 정보를 추출해서 권한정보 객체 authentication 객체를 생성
       String authorities = authentication.getAuthorities().stream()
          .map(GrantedAuthority::getAuthority)
@@ -109,19 +136,19 @@ public class TokenProvider implements InitializingBean {
               .compact();
 
       // JWT를 키, 알고리즘, 만료시간을 설정하고 생성해서 반환한다.
-      /*return Jwts.builder()
+      *//*return Jwts.builder()
          .setSubject(authentication.getName())
          .claim(AUTHORITIES_KEY, authorities)
          .signWith(key, SignatureAlgorithm.HS512)
          .setExpiration(validity)
-         .compact();*/
+         .compact();*//*
 
       return TokenDto.builder()
               .grantType("Bearer")
               .accessToken(accessToken)
               .refreshToken(refreshToken)
               .build();
-   }
+   }*/
 
    // Client로 부터 받은 token 의 정보를 이용해서 Authentication 객체를 반환하는 메서드
    public Authentication getAuthentication(String accessToken) {
