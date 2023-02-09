@@ -1,6 +1,7 @@
 package com.kakao.saramaracommunity.security.jwt;
 
-import com.kakao.saramaracommunity.member.dto.SecurityMemberDto;
+
+import com.kakao.saramaracommunity.member.dto.SignUpDto;
 import com.kakao.saramaracommunity.member.entity.UserEntity;
 import com.kakao.saramaracommunity.member.persistence.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -56,15 +57,13 @@ public class CustomUserDetailsService implements UserDetailsService {
       // 존재하는 사용자 찾아오기
       UserEntity userEntity = result.get();
 
-      SecurityMemberDto temp = SecurityMemberDto.builder()
+      SignUpDto temp = SignUpDto.builder()
           .email(userEntity.getEmail())
           .nickname(userEntity.getNickname())
-          .type(userEntity.getType())
+
           .profileImage(userEntity.getProfileImage())
-          .refreshToken(userEntity.getRefreshToken())
-          .authorities(userEntity.getRole().stream().map(userRole ->
-              new SimpleGrantedAuthority("ROLE_" + userRole.name())
-          ).collect(Collectors.toList()))
+
+          .userRole(userEntity.getRole())
           .build();
       log.info(userEntity);
       log.info(temp.toString());

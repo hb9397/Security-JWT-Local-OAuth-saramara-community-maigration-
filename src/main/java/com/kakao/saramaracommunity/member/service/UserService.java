@@ -1,8 +1,9 @@
 package com.kakao.saramaracommunity.member.service;
 
-import com.kakao.saramaracommunity.member.entity.AuthorityEntity;
 import com.kakao.saramaracommunity.exception.DuplicateMemberException;
 import com.kakao.saramaracommunity.exception.NotFoundMemberException;
+import com.kakao.saramaracommunity.member.entity.Type;
+import com.kakao.saramaracommunity.member.entity.UserRole;
 import com.kakao.saramaracommunity.util.SecurityUtil;
 import com.kakao.saramaracommunity.member.dto.SignUpDto;
 import com.kakao.saramaracommunity.member.entity.UserEntity;
@@ -33,23 +34,22 @@ public class UserService {
     // 각 각 의 테이블에 커넥션해서 작업하게 되는데 JPA 에서는 한번에 하나의 커넥션만 수행하기 때문에 트랜젝션 설정을 하지 않는다면 에러가 발생하게 된다.
     public SignUpDto signup(SignUpDto userDto) {
         // 이미 입력한 정보에 대한 회원이 있을 때 DuplicateMemberException 예외 발생
-        if (userRepository.findOneWithAuthoritiesByUsername(userDto.getUsername()).orElse(null) != null) {
+        if (userRepository.getWithRoles(userDto.getEmail()).orElse(null) != null) {
             throw DuplicateMemberException.builder().message("이미 가입되어 있는 유저입니다.").build();
         }
 
 
         // 중복된 정보의 사용자 정보와 사용자에 대한 권한 정보가 없다면
         // 해당 사용자에게 USER 권한 부여
-        AuthorityEntity authority = AuthorityEntity.builder()
-                .authorityName("ROLE_USER")
-                .build();
+
         // 사용자 정보를 DB 에 저장
         UserEntity user = UserEntity.builder()
-                .username(userDto.getUsername())
+                .email(userDto.getEmail())
                 .password(passwordEncoder.encode(userDto.getPassword()))
                 .nickname(userDto.getNickname())
-                .authorities(Collections.singleton(authority))
-                .activated(true)
+                .type(Type.LOCAL)
+                .role(Collections.singleton(UserRole.USER))
+                .profileImage(userDto.getProfileImage())
                 .build();
 
         return SignUpDto.from(userRepository.save(user));
@@ -58,7 +58,7 @@ public class UserService {
     // username 을 매개변수로 사용자 정보와 권한 정보를 가져오는 메서드인데
     @Transactional(readOnly = true)
     public SignUpDto getUserWithAuthorities(String username) {
-        return SignUpDto.from(userRepository.findOneWithAuthoritiesByUsername(username).orElse(null));
+        return SignUpDto.from(userRepository.getWithRoles(username).orElse(null));
     }
 
     // 현재 Security Context 에 저장된 username 의 사용자 정보, 권한정보 만을 가져오는 메서드
@@ -66,7 +66,7 @@ public class UserService {
     public SignUpDto getMyUserWithAuthorities() {
         return SignUpDto.from(
                 SecurityUtil.getCurrentUsername()
-                        .flatMap(userRepository::findOneWithAuthoritiesByUsername)
+                        .flatMap(userRepository::getWithRoles)
                         .orElseThrow(() ->  NotFoundMemberException.builder().message("Member not found").build())
         );
     }

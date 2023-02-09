@@ -1,7 +1,7 @@
 package com.kakao.saramaracommunity.member.controller;
 
+import com.kakao.saramaracommunity.common.dto.TokenDto;
 import com.kakao.saramaracommunity.security.jwt.JwtFilter;
-import com.kakao.saramaracommunity.common.TokenDto;
 import com.kakao.saramaracommunity.security.jwt.TokenProvider;
 import com.kakao.saramaracommunity.member.dto.LoginDto;
 import jakarta.validation.Valid;
@@ -48,7 +48,7 @@ public class AuthController {
 
         // Spring Security 에서 사용되는 인증용 토큰 객체를 client 로 부터 받은 username, password 를 기반으로 생성
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
+                new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
 
 
         // Spring Security 에서 사용할 인증 객체 Authentication 을 AuthenticationManagerBuilder 객체와

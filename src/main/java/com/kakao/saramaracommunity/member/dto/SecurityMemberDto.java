@@ -1,3 +1,4 @@
+/*
 package com.kakao.saramaracommunity.member.dto;
 
 import java.util.Collection;
@@ -79,3 +80,4 @@ public class SecurityMemberDto extends User implements OAuth2User {
 		return null;
 	}
 }
+*/
