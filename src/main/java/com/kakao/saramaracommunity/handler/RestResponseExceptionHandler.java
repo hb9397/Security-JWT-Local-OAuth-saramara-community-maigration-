@@ -1,6 +1,6 @@
 package com.kakao.saramaracommunity.handler;
 
-import com.kakao.saramaracommunity.common.ErrorDto;
+import com.kakao.saramaracommunity.common.dto.ErrorDto;
 import com.kakao.saramaracommunity.exception.DuplicateMemberException;
 import com.kakao.saramaracommunity.exception.NotFoundMemberException;
 import org.springframework.security.access.AccessDeniedException;

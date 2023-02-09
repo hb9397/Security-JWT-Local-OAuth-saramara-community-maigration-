@@ -14,7 +14,7 @@ public class LoginDto {
    // Validation 어노테이션
    @NotNull
    @Size(min = 3, max = 50)
-   private String username;
+   private String email;
 
    @NotNull
    @Size(min = 3, max = 100)

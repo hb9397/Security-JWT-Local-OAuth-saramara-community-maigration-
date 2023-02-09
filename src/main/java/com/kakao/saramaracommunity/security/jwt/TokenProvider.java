@@ -1,6 +1,6 @@
 package com.kakao.saramaracommunity.security.jwt;
 
-import com.kakao.saramaracommunity.common.TokenDto;
+import com.kakao.saramaracommunity.common.dto.TokenDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

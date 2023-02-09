@@ -1,4 +1,4 @@
-package com.kakao.saramaracommunity.common;
+package com.kakao.saramaracommunity.common.dto;
 
 import lombok.*;
 

@@ -1,7 +1,7 @@
 package com.kakao.saramaracommunity.handler;
 
 
-import com.kakao.saramaracommunity.common.ErrorDto;
+import com.kakao.saramaracommunity.common.dto.ErrorDto;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.validation.BindingResult;
