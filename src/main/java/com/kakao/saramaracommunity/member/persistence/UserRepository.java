@@ -1,5 +1,6 @@
 package com.kakao.saramaracommunity.member.persistence;
 
+import com.kakao.saramaracommunity.exception.NotFoundMemberException;
 import com.kakao.saramaracommunity.member.entity.UserEntity;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;

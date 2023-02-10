@@ -38,10 +38,10 @@ public class TokenProvider implements InitializingBean {
 
    public TokenProvider(
       @Value("${jwt.secret}") String secret,
-      @Value("${jwt.access-token-validity-in-seconds}")long accesstokenValidityInSeconds,
+      @Value("${jwt.access-token-validity-in-seconds}")long accessTokenValidityInMilliseconds,
       @Value("${jwt.refresh-token-validity-in-seconds}") long refreshTokenValidityInMilliseconds) {
       this.secret = secret;
-      this.accessTokenValidityInMilliseconds = accesstokenValidityInSeconds;
+      this.accessTokenValidityInMilliseconds = accessTokenValidityInMilliseconds;
       this.refreshTokenValidityInMilliseconds = refreshTokenValidityInMilliseconds;
    }
 
@@ -63,8 +63,8 @@ public class TokenProvider implements InitializingBean {
 
       // token 의 만료시간을 만드는데 현재시간 + application.yaml 파일로 부터 주입 받은 만료시간 으로 생성
       long now = (new Date()).getTime();
-      Date accessValidity = new Date(now + this.accessTokenValidityInMilliseconds);
-
+      Date accessValidity = new Date(now + this.accessTokenValidityInMilliseconds * 1000);
+      log.warn(accessValidity);
       // Access Token 생성
       String accessToken = Jwts.builder()
               .setSubject(authentication.getName())
@@ -85,10 +85,11 @@ public class TokenProvider implements InitializingBean {
 
       // token 의 만료시간을 만드는데 현재시간 + application.yaml 파일로 부터 주입 받은 만료시간 으로 생성
       long now = (new Date()).getTime();
-      Date refreshValidity = new Date(now + this.refreshTokenValidityInMilliseconds);
-
+      Date refreshValidity = new Date(now + this.refreshTokenValidityInMilliseconds * 1000);
+      log.warn(refreshValidity);
       // Refresh Token 생성
       String refreshToken = Jwts.builder()
+              .claim(AUTHORITIES_KEY, authorities)
               .setExpiration(refreshValidity)
               .signWith(key, SignatureAlgorithm.HS256)
               .compact();

@@ -50,10 +50,9 @@ jwt:
   #HS512 알고리즘을 사용하면 Secret Key 는  64(512bit)Byte 이상이 필요하고 base64 로 인코딩해서 사용한다.
   secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
   # 토큰 만료 시간
-  token-validity-in-seconds: 86400
   access-token-validity-in-seconds: 86400
   refresh-token-validity-in-seconds: 604800
-  refresh-cookie-key: "refresh"
+
 
 logging:
   level:

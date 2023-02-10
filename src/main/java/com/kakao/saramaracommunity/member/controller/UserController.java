@@ -6,6 +6,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
+import lombok.extern.log4j.Log4j2;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 
 @RequiredArgsConstructor
+@Log4j2
 @RestController
 @RequestMapping("/api")
 public class UserController {
@@ -46,13 +50,14 @@ public class UserController {
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<SignUpDto> getMyUserInfo(HttpServletRequest request) {
         return ResponseEntity.ok(userService.getMyUserWithAuthorities());
+
     }
 
     // /user/사용자 이름 에 대한 GET 요청에 대해서는 ADMIN 관리자만 허용
     // 모든 사용자 이름으로 사용자의 정보를 조회할 수 있는 메서드
-    @GetMapping("/user/{username}")
+    @GetMapping("/user/{nickname}")
     @PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity<SignUpDto> getUserInfo(@PathVariable String username) {
-        return ResponseEntity.ok(userService.getUserWithAuthorities(username));
+    public ResponseEntity<SignUpDto> getUserInfo(@PathVariable String nickname) {
+        return ResponseEntity.ok(userService.getUserWithAuthorities(nickname));
     }
 }

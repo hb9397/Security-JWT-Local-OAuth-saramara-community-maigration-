@@ -1,5 +1,7 @@
 package com.kakao.saramaracommunity.member.service;
 
+
+import com.kakao.saramaracommunity.common.dto.ErrorDto;
 import com.kakao.saramaracommunity.exception.DuplicateMemberException;
 import com.kakao.saramaracommunity.exception.NotFoundMemberException;
 import com.kakao.saramaracommunity.member.entity.Type;
@@ -9,6 +11,7 @@ import com.kakao.saramaracommunity.member.dto.SignUpDto;
 import com.kakao.saramaracommunity.member.entity.UserEntity;
 import com.kakao.saramaracommunity.member.persistence.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 
+@Log4j2
 @RequiredArgsConstructor
 @Service
 public class UserService {
@@ -35,7 +39,8 @@ public class UserService {
     public SignUpDto signup(SignUpDto userDto) {
         // 이미 입력한 정보에 대한 회원이 있을 때 DuplicateMemberException 예외 발생
         if (userRepository.getWithRoles(userDto.getEmail()).orElse(null) != null) {
-            throw DuplicateMemberException.builder().message("이미 가입되어 있는 유저입니다.").build();
+            log.warn("시발");
+             throw DuplicateMemberException.builder().message("w제발").build();
         }
 
 
@@ -51,6 +56,7 @@ public class UserService {
                 .role(Collections.singleton(UserRole.USER))
                 .profileImage(userDto.getProfileImage())
                 .build();
+
 
         return SignUpDto.from(userRepository.save(user));
     }

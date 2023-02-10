@@ -14,20 +14,37 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 
+import java.sql.Timestamp;
+
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 @ControllerAdvice
 public class RestResponseExceptionHandler extends ResponseEntityExceptionHandler {
+    Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+   /* @ResponseStatus(CONFLICT)
+    @ExceptionHandler(value = { DuplicateMemberException.class })
+    @ResponseBody
+    protected ErrorDto conflict(RuntimeException ex, WebRequest request) {
+
+        return new ErrorDto(timestamp,CONFLICT.value(),ex.getMessage(), request.getContextPath());
+    }*/
 
     @ResponseStatus(CONFLICT)
     @ExceptionHandler(value = { DuplicateMemberException.class })
     @ResponseBody
-    protected ErrorDto conflict(RuntimeException ex, WebRequest request) {
-        return new ErrorDto(CONFLICT.value(), ex.getMessage());
+    protected ErrorDto conflict(RuntimeException ex, HttpServletRequest request) {
+        log.info(ex.getMessage());
+        ErrorDto errorDto = new ErrorDto(timestamp, CONFLICT.value(),ex.getMessage(), request.getRequestURI());
+
+        return errorDto;
     }
 
     @ResponseStatus(FORBIDDEN)
     @ExceptionHandler(value = { NotFoundMemberException.class, AccessDeniedException.class })
     @ResponseBody
-    protected ErrorDto forbidden(RuntimeException ex, WebRequest request) {
-        return new ErrorDto(FORBIDDEN.value(), ex.getMessage());
+    protected ErrorDto forbidden(RuntimeException ex, HttpServletRequest request) {
+        return new ErrorDto(timestamp, FORBIDDEN.value(), ex.getMessage(), request.getRequestURI());
     }
 }
