@@ -3,7 +3,6 @@ package com.kakao.saramaracommunity.member.entity;
 import com.kakao.saramaracommunity.common.domain.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.extern.log4j.Log4j2;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,7 +18,7 @@ import org.hibernate.annotations.Where;
 @Where(clause = "deleted_at is NULL")
 @SQLDelete(sql = "update member set deleted_at = CURRENT_TIMESTAMP where member_id = ?")
 @Entity
-public class UserEntity extends BaseTimeEntity {
+public class Member extends BaseTimeEntity {
 
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,7 +40,7 @@ public class UserEntity extends BaseTimeEntity {
    @Builder.Default
    @Enumerated(EnumType.STRING)
    @Column(nullable = false)
-   private Set<UserRole> role = new HashSet<>();
+   private Set<Role> role = new HashSet<>();
 
    private String profileImage;
 
@@ -54,7 +53,7 @@ public class UserEntity extends BaseTimeEntity {
    public void changePassword(String password) {this.password = password;}
    public void changeProfileImage(String profileImage) {this.profileImage = profileImage;}
 
-   public void setRole(UserRole userRole) {this.role.add(userRole);}
+   public void setRole(Role role) {this.role.add(role);}
 
    public void setType(Type type) {this.type = type;}
 

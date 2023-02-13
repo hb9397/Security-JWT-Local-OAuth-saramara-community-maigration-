@@ -5,8 +5,8 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kakao.saramaracommunity.member.entity.Type;
-import com.kakao.saramaracommunity.member.entity.UserEntity;
-import com.kakao.saramaracommunity.member.entity.UserRole;
+import com.kakao.saramaracommunity.member.entity.Member;
+import com.kakao.saramaracommunity.member.entity.Role;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -42,16 +42,16 @@ public class SecurityMemberDto {
 
 	private Type type;
 
-	private Set<UserRole> userRole;
+	private Set<Role> role;
 
-	public static SecurityMemberDto from(UserEntity userEntity){
+	public static SecurityMemberDto from(Member userEntity){
 		if(userEntity == null) return null;
 
 		return SecurityMemberDto.builder()
 			.email(userEntity.getEmail())
 			.nickname(userEntity.getNickname())
-			.userRole(userEntity.getRole().stream()
-				.map(userRole1 -> UserRole.USER)
+			.role(userEntity.getRole().stream()
+				.map(role1 -> Role.USER)
 				.collect(Collectors.toSet()))
 			.profileImage(userEntity.getProfileImage())
 			.type(userEntity.getType())

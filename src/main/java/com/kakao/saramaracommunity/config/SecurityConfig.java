@@ -58,18 +58,6 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 
-        // oauth 로그인 시 결과를 redirect 할 URI
-        /*httpSecurity
-            .oauth2Login()
-            .redirectionEndpoint()
-            .baseUri("/oauth2/code/*")
-                .and()
-                    .userInfoEndpoint()
-                        .userService(customOAuth2UserService)
-                            .and()
-                                .successHandler()
-                                    .failureHandler();*/
-
         httpSecurity
                 // token을 사용하는 방식이기 때문에 csrf를 disable합니다.
                 .csrf().disable()
@@ -102,6 +90,18 @@ public class SecurityConfig {
                 // TokenProvider 를 시큐리티 로직에 등록하는 JwtFilter 를 addFilterBefore 메서드로 등록한 JwtSecurityConfig 적용
                 .and()
                 .apply(new JwtSecurityConfig(tokenProvider));
+
+        // oauth 로그인 시 결과를 redirect 할 URI
+        /*httpSecurity
+            .oauth2Login()
+            .redirectionEndpoint()
+            .baseUri("/oauth2/code/*")
+                .and()
+                    .userInfoEndpoint()
+                        .userService(customOAuth2UserService)
+                            .and()
+                                .successHandler()
+                                    .failureHandler();*/
 
 
         return httpSecurity.build();

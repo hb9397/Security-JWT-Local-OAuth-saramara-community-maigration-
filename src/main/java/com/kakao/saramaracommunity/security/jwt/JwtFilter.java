@@ -16,16 +16,10 @@ import java.io.IOException;
 @Log4j2
 @RequiredArgsConstructor
 public class JwtFilter extends GenericFilterBean {
-
-   //private static final Logger logger = LoggerFactory.getLogger(JwtFilter.class);
    public static final String AUTHORIZATION_HEADER = "Authorization";
 
    // TokenProvider 의존성 주입
    private final TokenProvider tokenProvider;
-
-   /*public JwtFilter(TokenProvider tokenProvider) {
-      this.tokenProvider = tokenProvider;
-   }*/
 
    // GenericFilterBean 을 상속받아서 doFilter를 JWT 에 맞게 커스텀
    // 실제 필터링 로직은 doFilter 메서드가 수행한다.

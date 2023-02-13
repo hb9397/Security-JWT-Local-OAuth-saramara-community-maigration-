@@ -1,7 +1,7 @@
 package com.kakao.saramaracommunity.security.jwt;
 
-import com.kakao.saramaracommunity.member.entity.UserEntity;
-import com.kakao.saramaracommunity.member.persistence.UserRepository;
+import com.kakao.saramaracommunity.member.entity.Member;
+import com.kakao.saramaracommunity.member.persistence.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 public class CustomUserDetailsService implements UserDetailsService {
 
    // UserRepository 를 생성자 주입을 통해 주입 받는다.
-   private final UserRepository userRepository;
+   private final MemberRepository memberRepository;
 
    /*public CustomUserDetailsService(UserRepository userRepository) {
       this.userRepository = userRepository;
@@ -47,7 +47,7 @@ public class CustomUserDetailsService implements UserDetailsService {
    public UserDetails loadUserByUsername(final String email) throws UsernameNotFoundException {
       log.info("loadUserByUsername: " + email);
 
-      Optional<UserEntity> result = userRepository.getWithRoles(email);
+      Optional<Member> result = memberRepository.getWithRoles(email);
       if (result.isEmpty()) { // 유저가 없다면
          log.info("wef");
          throw new UsernameNotFoundException("등록되지 않은 회원입니다.");
@@ -55,7 +55,7 @@ public class CustomUserDetailsService implements UserDetailsService {
       }
 
       // 존재하는 사용자 찾아오기
-      UserEntity userEntity = result.get();
+      Member userEntity = result.get();
 
       List<GrantedAuthority> authorities = userEntity.getRole().stream().map(userRole ->
           new SimpleGrantedAuthority("ROLE_" + userRole.name())
