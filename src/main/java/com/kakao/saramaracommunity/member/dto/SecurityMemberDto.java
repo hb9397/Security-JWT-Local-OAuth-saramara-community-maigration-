@@ -1,4 +1,3 @@
-/*
 package com.kakao.saramaracommunity.member.dto;
 
 import java.util.Set;
@@ -54,8 +53,9 @@ public class SecurityMemberDto {
 			.userRole(userEntity.getRole().stream()
 				.map(userRole1 -> UserRole.USER)
 				.collect(Collectors.toSet()))
+			.profileImage(userEntity.getProfileImage())
+			.type(userEntity.getType())
 			.build();
 	}
 
 }
-*/

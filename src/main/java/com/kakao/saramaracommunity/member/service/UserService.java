@@ -1,13 +1,12 @@
 package com.kakao.saramaracommunity.member.service;
 
 
-import com.kakao.saramaracommunity.common.dto.ErrorDto;
 import com.kakao.saramaracommunity.exception.DuplicateMemberException;
 import com.kakao.saramaracommunity.exception.NotFoundMemberException;
+import com.kakao.saramaracommunity.member.dto.SecurityMemberDto;
 import com.kakao.saramaracommunity.member.entity.Type;
 import com.kakao.saramaracommunity.member.entity.UserRole;
 import com.kakao.saramaracommunity.util.SecurityUtil;
-import com.kakao.saramaracommunity.member.dto.SignUpDto;
 import com.kakao.saramaracommunity.member.entity.UserEntity;
 import com.kakao.saramaracommunity.member.persistence.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,54 +25,49 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    /*public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }*/
-
-    @Transactional
     // 회원가입 메서드
     // 회원가입 시 사용자가 입력한 정보에 대응되는 UserDto 를 받아 DB에서 User의 정보와 해당 User의 정보가 존재하는지 확인하는데
     // JPA 에서 제공하는 쿼리 메서드는 두 개 이상의 테이블에서 작업을 하는 경우
     // 각 각 의 테이블에 커넥션해서 작업하게 되는데 JPA 에서는 한번에 하나의 커넥션만 수행하기 때문에 트랜젝션 설정을 하지 않는다면 에러가 발생하게 된다.
-    public SignUpDto signup(SignUpDto userDto) {
+
+    @Transactional
+    public SecurityMemberDto signup(SecurityMemberDto securityMemberDto) {
         // 이미 입력한 정보에 대한 회원이 있을 때 DuplicateMemberException 예외 발생
-        if (userRepository.getWithRoles(userDto.getEmail()).orElse(null) != null) {
+        if (userRepository.getWithRoles(securityMemberDto.getEmail()).orElse(null) != null) {
             log.warn("시발");
-             throw DuplicateMemberException.builder().message("w제발").build();
+            throw new DuplicateMemberException("젭잘 불탁할겡");
         }
 
 
         // 중복된 정보의 사용자 정보와 사용자에 대한 권한 정보가 없다면
         // 해당 사용자에게 USER 권한 부여
-
         // 사용자 정보를 DB 에 저장
         UserEntity user = UserEntity.builder()
-                .email(userDto.getEmail())
-                .password(passwordEncoder.encode(userDto.getPassword()))
-                .nickname(userDto.getNickname())
-                .type(Type.LOCAL)
-                .role(Collections.singleton(UserRole.USER))
-                .profileImage(userDto.getProfileImage())
-                .build();
+            .email(securityMemberDto.getEmail())
+            .password(passwordEncoder.encode(securityMemberDto.getPassword()))
+            .nickname(securityMemberDto.getNickname())
+            .type(Type.LOCAL)
+            .role(Collections.singleton(UserRole.USER))
+            .profileImage(securityMemberDto.getProfileImage())
+            .build();
 
 
-        return SignUpDto.from(userRepository.save(user));
+        return SecurityMemberDto.from(userRepository.save(user));
     }
 
     // username 을 매개변수로 사용자 정보와 권한 정보를 가져오는 메서드인데
     @Transactional(readOnly = true)
-    public SignUpDto getUserWithAuthorities(String username) {
-        return SignUpDto.from(userRepository.getWithRoles(username).orElse(null));
+    public SecurityMemberDto getUserWithAuthorities(String username) {
+        return SecurityMemberDto.from(userRepository.getWithRoles(username).orElse(null));
     }
 
     // 현재 Security Context 에 저장된 username 의 사용자 정보, 권한정보 만을 가져오는 메서드
     @Transactional(readOnly = true)
-    public SignUpDto getMyUserWithAuthorities() {
-        return SignUpDto.from(
-                SecurityUtil.getCurrentUsername()
-                        .flatMap(userRepository::getWithRoles)
-                        .orElseThrow(() ->  NotFoundMemberException.builder().message("Member not found").build())
+    public SecurityMemberDto getMyUserWithAuthorities() {
+        return SecurityMemberDto.from(
+            SecurityUtil.getCurrentUsername()
+                .flatMap(userRepository::getWithRoles)
+                .orElseThrow(() ->  NotFoundMemberException.builder().message("Member not found").build())
         );
     }
 }

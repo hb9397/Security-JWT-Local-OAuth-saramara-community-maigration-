@@ -36,6 +36,7 @@ public class RestResponseExceptionHandler extends ResponseEntityExceptionHandler
     @ResponseBody
     protected ErrorDto conflict(RuntimeException ex, HttpServletRequest request) {
         log.info(ex.getMessage());
+        log.info(ex);
         ErrorDto errorDto = new ErrorDto(timestamp, CONFLICT.value(),ex.getMessage(), request.getRequestURI());
 
         return errorDto;

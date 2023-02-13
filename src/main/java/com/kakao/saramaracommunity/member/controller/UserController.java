@@ -1,12 +1,12 @@
 package com.kakao.saramaracommunity.member.controller;
 
+import com.kakao.saramaracommunity.member.dto.SecurityMemberDto;
 import com.kakao.saramaracommunity.member.service.UserService;
-import com.kakao.saramaracommunity.member.dto.SignUpDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
+
 import lombok.extern.log4j.Log4j2;
 
 import org.springframework.http.ResponseEntity;
@@ -22,10 +22,6 @@ import java.io.IOException;
 public class UserController {
     private final UserService userService;
 
-    /*public UserController(UserService userService) {
-        this.userService = userService;
-    }*/
-
     @GetMapping("/hello")
     public ResponseEntity<String> hello() {
         return ResponseEntity.ok("hello");
@@ -38,17 +34,17 @@ public class UserController {
 
     // /signup 에 대한 POST 요청시 UserDto 를 매개변수로 받아서 UserService 의 signup() 메서드 호출하는 메서드
     @PostMapping("/signup")
-    public ResponseEntity<SignUpDto> signup(
-            @Valid @RequestBody SignUpDto userDto
+    public ResponseEntity<SecurityMemberDto> signup(
+        @Valid @RequestBody SecurityMemberDto securityMemberDto
     ) {
-        return ResponseEntity.ok(userService.signup(userDto));
+        return ResponseEntity.ok(userService.signup(securityMemberDto));
     }
 
     // /user 로의 GET 요청에 대해서 @PreAuthorize 로 USER, ADMIN 두 가지 권한을 모두 허용
     // 사용자 자신의 정보를 확인 하는 메서드
     @GetMapping("/user")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public ResponseEntity<SignUpDto> getMyUserInfo(HttpServletRequest request) {
+    public ResponseEntity<SecurityMemberDto> getMyUserInfo(HttpServletRequest request) {
         return ResponseEntity.ok(userService.getMyUserWithAuthorities());
 
     }
@@ -57,7 +53,7 @@ public class UserController {
     // 모든 사용자 이름으로 사용자의 정보를 조회할 수 있는 메서드
     @GetMapping("/user/{nickname}")
     @PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity<SignUpDto> getUserInfo(@PathVariable String nickname) {
+    public ResponseEntity<SecurityMemberDto> getUserInfo(@PathVariable String nickname) {
         return ResponseEntity.ok(userService.getUserWithAuthorities(nickname));
     }
 }

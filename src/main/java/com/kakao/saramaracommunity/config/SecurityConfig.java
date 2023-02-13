@@ -4,6 +4,8 @@ import com.kakao.saramaracommunity.security.jwt.JwtAccessDeniedHandler;
 import com.kakao.saramaracommunity.security.jwt.JwtAuthenticationEntryPoint;
 import com.kakao.saramaracommunity.security.jwt.JwtSecurityConfig;
 import com.kakao.saramaracommunity.security.jwt.TokenProvider;
+//import com.kakao.saramaracommunity.security.oauth.CustomOAuth2UserService;
+
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.context.annotation.Bean;
@@ -33,6 +35,8 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
+    //private final CustomOAuth2UserService customOAuth2UserService;
+
     /*public SecurityConfig(
             TokenProvider tokenProvider,
             CorsFilter corsFilter,
@@ -55,10 +59,16 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 
         // oauth 로그인 시 결과를 redirect 할 URI
-        httpSecurity
+        /*httpSecurity
             .oauth2Login()
             .redirectionEndpoint()
-            .baseUri("/oauth2/code/*");
+            .baseUri("/oauth2/code/*")
+                .and()
+                    .userInfoEndpoint()
+                        .userService(customOAuth2UserService)
+                            .and()
+                                .successHandler()
+                                    .failureHandler();*/
 
         httpSecurity
                 // token을 사용하는 방식이기 때문에 csrf를 disable합니다.
