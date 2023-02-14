@@ -11,6 +11,7 @@ import lombok.extern.log4j.Log4j2;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -55,5 +56,13 @@ public class UserController {
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<SecurityMemberDto> getUserInfo(@PathVariable String nickname) {
         return ResponseEntity.ok(userService.getUserWithAuthorities(nickname));
+    }
+
+
+    @GetMapping("/")
+    public ResponseEntity<String> index(Authentication authentication) {
+        System.out.println("authentication: " + authentication);
+        return ResponseEntity.ok().body(String.valueOf(authentication));
+        //        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

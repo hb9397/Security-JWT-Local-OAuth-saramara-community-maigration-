@@ -38,7 +38,7 @@ public class SecurityMemberDto {
 	@Size(min = 3, max = 50)
 	private String nickname;
 
-	private String profileImage;
+	private String picture;
 
 	private Type type;
 
@@ -53,7 +53,7 @@ public class SecurityMemberDto {
 			.role(userEntity.getRole().stream()
 				.map(role1 -> Role.USER)
 				.collect(Collectors.toSet()))
-			.profileImage(userEntity.getProfileImage())
+			.picture(userEntity.getPicture())
 			.type(userEntity.getType())
 			.build();
 	}

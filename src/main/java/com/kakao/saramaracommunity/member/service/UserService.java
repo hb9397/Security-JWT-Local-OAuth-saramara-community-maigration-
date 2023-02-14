@@ -48,7 +48,7 @@ public class UserService {
             .nickname(securityMemberDto.getNickname())
             .type(Type.LOCAL)
             .role(Collections.singleton(Role.USER))
-            .profileImage(securityMemberDto.getProfileImage())
+            .picture(securityMemberDto.getPicture())
             .build();
 
 

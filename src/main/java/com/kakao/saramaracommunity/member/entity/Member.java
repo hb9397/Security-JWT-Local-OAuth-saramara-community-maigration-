@@ -42,30 +42,38 @@ public class Member extends BaseTimeEntity {
    @Column(nullable = false)
    private Set<Role> role = new HashSet<>();
 
-   private String profileImage;
+   private String picture;
 
    private String refreshToken;
 
 
    // 회원이 정보를 수정, RefreshToken 재발급 등의 이유로 바뀔 수 있는 값들에 대한 처리
-   public void changeNickname(String nickname) {this.nickname = nickname;}
+   /*public void changeNickname(String nickname) {this.nickname = nickname;}
 
    public void changePassword(String password) {this.password = password;}
-   public void changeProfileImage(String profileImage) {this.profileImage = profileImage;}
+   public void changePicture(String profileImage) {this.picture = profileImage;}
 
    public void setRole(Role role) {this.role.add(role);}
 
    public void setType(Type type) {this.type = type;}
 
-   public void setRefreshToken(String refreshToken) {this.refreshToken = refreshToken;}
+   public void setRefreshToken(String refreshToken) {this.refreshToken = refreshToken;}*/
 
-   // UserEntity 객체와 Authority 객체를 다대다 관계를 1:N, N:1 관계의 Join Table 로 정의한다는 의미
-   // @JoinColumn(name = "authority_name", referencedColumnName = "authority_name" 특정 user가 가진 자격이름을 갖는다.
-   /*@ManyToMany
-   @JoinTable(
-      name = "user_authority",
-      joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "user_id")},
-      inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_name")})
-   private Set<AuthorityEntity> authorities;*/
+   @Builder
+   public Member(Type type, String email, String nickname, String password, Set<Role> role, String picture) {
+      this.type = type;
+      this.email = email;
+      this.nickname = nickname;
+      this.password = password;
+      this.role = role;
+      this.picture = picture;
+   }
+
+   public Member update(String email, String nickname, String picture) {
+      this.email = email;
+      this.nickname = nickname;
+      this.picture = picture;
+      return this;
+   }
 
 }
