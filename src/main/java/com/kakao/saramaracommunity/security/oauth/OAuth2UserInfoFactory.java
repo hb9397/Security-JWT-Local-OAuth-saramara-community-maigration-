@@ -1,4 +1,3 @@
-/*
 package com.kakao.saramaracommunity.security.oauth;
 
 import java.util.Map;
@@ -18,4 +17,3 @@ public class OAuth2UserInfoFactory {
 		}
 	}
 }
-*/

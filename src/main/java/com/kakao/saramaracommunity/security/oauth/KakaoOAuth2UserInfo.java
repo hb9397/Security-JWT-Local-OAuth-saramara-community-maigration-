@@ -1,4 +1,3 @@
-/*
 package com.kakao.saramaracommunity.security.oauth;
 
 import java.util.Map;
@@ -33,4 +32,3 @@ public class KakaoOAuth2UserInfo extends OAuth2UserInfo {
 	}
 
 }
-*/
