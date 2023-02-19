@@ -89,7 +89,7 @@ public class TokenProvider implements InitializingBean {
       log.warn(refreshValidity);
       // Refresh Token 생성
       String refreshToken = Jwts.builder()
-              .claim(AUTHORITIES_KEY, authorities)
+              .setSubject(authentication.getName())
               .setExpiration(refreshValidity)
               .signWith(key, SignatureAlgorithm.HS256)
               .compact();

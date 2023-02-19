@@ -5,6 +5,10 @@ import com.kakao.saramaracommunity.security.jwt.JwtAuthenticationEntryPoint;
 import com.kakao.saramaracommunity.security.jwt.JwtSecurityConfig;
 import com.kakao.saramaracommunity.security.jwt.TokenProvider;
 
+import com.kakao.saramaracommunity.security.oauth.CookieAuthorizationRequestRepository;
+import com.kakao.saramaracommunity.security.oauth.CustomOAuth2UserService;
+import com.kakao.saramaracommunity.security.oauth.OAuth2AuthenticationFailureHandler;
+import com.kakao.saramaracommunity.security.oauth.OAuth2AuthenticationSuccessHandler;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.context.annotation.Bean;
@@ -36,8 +40,11 @@ public class SecurityConfig {
     private final CorsFilter corsFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final CustomOAuth2UserService customOAuth2UserService;
 
-    //private final CustomOAuth2UserService customOAuth2UserService;
+    private final CookieAuthorizationRequestRepository cookieAuthorizationRequestRepository;
+    private final OAuth2AuthenticationSuccessHandler authenticationSuccessHandler;
+    private final OAuth2AuthenticationFailureHandler authenticationFailureHandler;
     @Bean
     // 비밀번호 암호화를 위한 메서드
     public PasswordEncoder passwordEncoder() {
@@ -45,37 +52,46 @@ public class SecurityConfig {
     }
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        /*httpSecurity
-            .formLogin().disable()
-                .oauth2Login()
-                    .authorizationEndpoint().baseUri("oauth2/authorize")
-                .authorizationRequestRepository(coo)*/
 
         httpSecurity
+                .cors().and()
                 // token을 사용하는 방식이기 때문에 csrf를 disable합니다.
                 .csrf().disable()
+                // JWT 토큰을 사용하므로(jwt 자체가 stateless 한 상태이므로) 서버단에서 세션을 사용하지 않기 때문에 STATELESS로 설정
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-                .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
+        httpSecurity
+                .formLogin().disable()
+                        .oauth2Login()
+                                .authorizationEndpoint()
+                                        .baseUri("/oauth2/authorization")
+                                        .authorizationRequestRepository(cookieAuthorizationRequestRepository).and()
+                                .redirectionEndpoint()
+                                        .baseUri("/oauth2/callback/*").and()
+                        .userInfoEndpoint()
+                                .userService(customOAuth2UserService)
+                        .and()
+                        .successHandler(authenticationSuccessHandler)
+                                .failureHandler(authenticationFailureHandler);
 
-                // ExceptionHandling 시 401, 403 에러에 대해서 예외에 대해 만든 클래스를 사용
+        // ExceptionHandling 시 401, 403 에러에 대해서 예외에 대해 만든 클래스를 사용
+        httpSecurity
                 .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                .accessDeniedHandler(jwtAccessDeniedHandler)
+                .accessDeniedHandler(jwtAccessDeniedHandler);
 
-
-                // JWT 토큰을 사용하므로(jwt 자체가 stateless 한 상태이므로) 서버단에서 세션을 사용하지 않기 때문에 STATELESS로 설정
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-
-                .and()
+        httpSecurity
                 .authorizeHttpRequests() // HttpServletRequest 를 사용하는 요청에 대한 접근을 제한을 설정하기 위한 메서드
                 // 2가지 URL 에 대해서는 제한없이 허용하겠다는 메서드, 로그인, 회원가입 에는 토큰이 없는 상태로 접근하기 때문
-                .requestMatchers( "/favicon.ico", "/login/oauth2/code/naver/**", "/error", "/api/authenticate", "/oauth2/**","/api/signup", "/api/login","/", "/login/**", "/login").permitAll()
+                .requestMatchers( "/favicon.ico","/error", "/api/authenticate","/api/signup", "/api/login").permitAll()
+                // OAuth 로 부터 얻은 제공자 사이트에서 주는 인증 토큰확인 url, ouath 로그인 url 권한 없이 진입
+                .requestMatchers("/auth/**", "/oauth2/**").permitAll()
                 //.requestMatchers(PathRequest.toH2Console()).permitAll()
                 // 위의 세가지 URL 을 제외한 요청에는 인증을 하겠다는 의미
                 .anyRequest().authenticated();
 
+        httpSecurity.addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class);
 
         // TokenProvider 를 시큐리티 로직에 등록하는 JwtFilter 를 addFilterBefore 메서드로 등록한 JwtSecurityConfig 적용
         httpSecurity.apply(new JwtSecurityConfig(tokenProvider));

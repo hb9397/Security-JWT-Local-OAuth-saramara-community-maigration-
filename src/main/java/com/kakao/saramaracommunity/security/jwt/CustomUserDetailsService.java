@@ -38,30 +38,27 @@ public class CustomUserDetailsService implements UserDetailsService {
    // userdetails.User 객체를 생성해서 반환하고, DB에 정보가 없는 경우 예외를 발생 시킨다.
    // JPA 에서 제공하는 쿼리 메서드는 두 개 이상의 테이블에서 작업을 하는 경우
    // 각 각 의 테이블에 커넥션해서 작업하게 되는데 JPA 에서는 한번에 하나의 커넥션만 수행하기 때문에 트랜젝션 설정을 하지 않는다면 에러가 발생하게 된다.
-   /*public UserDetails loadUserByUsername(final String username) {
-      return userRepository.findOneWithAuthoritiesByUsername(username)
-         .map(user -> createUser(username, user))
-         .orElseThrow(() -> new UsernameNotFoundException(username + " -> 데이터베이스에서 찾을 수 없습니다."));
-   }*/
+
 
    public UserDetails loadUserByUsername(final String email) throws UsernameNotFoundException {
       log.info("loadUserByUsername: " + email);
 
-      Optional<Member> result = memberRepository.getWithRoles(email);
-      if (result.isEmpty()) { // 유저가 없다면
+      Optional<Member> existMember = memberRepository.getWithRolesEqualLocal(email);
+      if (existMember.isEmpty()) { // 유저가 없다면
          log.info("wef");
-         throw new UsernameNotFoundException("등록되지 않은 회원입니다.");
+         throw new UsernameNotFoundException("등록되지 않은 회원으로 회원가입 처리. ");
 
       }
 
       // 존재하는 사용자 찾아오기
-      Member userEntity = result.get();
+      Member authMember = existMember.get();
 
-      List<GrantedAuthority> authorities = userEntity.getRole().stream().map(userRole ->
+      List<GrantedAuthority> authorities = authMember.getRole().stream().map(userRole ->
           new SimpleGrantedAuthority("ROLE_" + userRole.name())
       ).collect(Collectors.toList());
 
-      return new User(userEntity.getEmail(), userEntity.getPassword(),  authorities);
+      return new User(authMember.getEmail(), authMember.getPassword(),  authorities);
+
    }
 
 

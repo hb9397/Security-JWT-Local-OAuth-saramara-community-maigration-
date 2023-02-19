@@ -33,7 +33,7 @@ public class UserService {
     @Transactional
     public SecurityMemberDto signup(SecurityMemberDto securityMemberDto) {
         // 이미 입력한 정보에 대한 회원이 있을 때 DuplicateMemberException 예외 발생
-        if (memberRepository.getWithRoles(securityMemberDto.getEmail()).orElse(null) != null) {
+        if (memberRepository.getWithRolesEqualLocal(securityMemberDto.getEmail()).orElse(null) != null) {
             log.warn("시발");
             throw new DuplicateMemberException("젭잘 불탁할겡");
         }
@@ -57,8 +57,8 @@ public class UserService {
 
     // username 을 매개변수로 사용자 정보와 권한 정보를 가져오는 메서드인데
     @Transactional(readOnly = true)
-    public SecurityMemberDto getUserWithAuthorities(String username) {
-        return SecurityMemberDto.from(memberRepository.getWithRoles(username).orElse(null));
+    public SecurityMemberDto getUserWithAuthorities(String email) {
+        return SecurityMemberDto.from(memberRepository.getWithRolesEqualLocal(email).orElse(null));
     }
 
     // 현재 Security Context 에 저장된 username 의 사용자 정보, 권한정보 만을 가져오는 메서드
@@ -66,7 +66,7 @@ public class UserService {
     public SecurityMemberDto getMyUserWithAuthorities() {
         return SecurityMemberDto.from(
             SecurityUtil.getCurrentUsername()
-                .flatMap(memberRepository::getWithRoles)
+                .flatMap(memberRepository::getWithRolesEqualLocal)
                 .orElseThrow(() ->  NotFoundMemberException.builder().message("Member not found").build())
         );
     }
