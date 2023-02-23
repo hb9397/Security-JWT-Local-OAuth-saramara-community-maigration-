@@ -1,5 +1,6 @@
 package com.kakao.saramaracommunity.member.controller;
 
+import com.kakao.saramaracommunity.member.dto.MemberDto;
 import com.kakao.saramaracommunity.member.dto.SecurityMemberDto;
 import com.kakao.saramaracommunity.member.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,19 +20,9 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @Log4j2
 @RestController
-@RequestMapping("/api")
-public class UserController {
+@RequestMapping("/api/member")
+public class MemberController {
     private final UserService userService;
-
-    @GetMapping("/hello")
-    public ResponseEntity<String> hello() {
-        return ResponseEntity.ok("hello");
-    }
-
-    @PostMapping("/test-redirect")
-    public void testRedirect(HttpServletResponse response) throws IOException {
-        response.sendRedirect("/api/user");
-    }
 
     // /signup 에 대한 POST 요청시 UserDto 를 매개변수로 받아서 UserService 의 signup() 메서드 호출하는 메서드
     @PostMapping("/signup")
@@ -39,6 +30,13 @@ public class UserController {
         @Valid @RequestBody SecurityMemberDto securityMemberDto
     ) {
         return ResponseEntity.ok(userService.signup(securityMemberDto));
+    }
+
+    @PostMapping("/infochange")
+    public ResponseEntity<MemberDto> infoChange(
+        @Valid @RequestBody MemberDto memberDto
+    ){
+        return null;
     }
 
     // /user 로의 GET 요청에 대해서 @PreAuthorize 로 USER, ADMIN 두 가지 권한을 모두 허용
@@ -58,11 +56,4 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserWithAuthorities(nickname));
     }
 
-
-    @GetMapping("/")
-    public ResponseEntity<String> index(Authentication authentication) {
-        System.out.println("authentication: " + authentication);
-        return ResponseEntity.ok().body(String.valueOf(authentication));
-        //        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
 }

@@ -14,9 +14,14 @@ public class RepositoryTest {
 
     @Test
     public void getEmailWithRole(){
-
         System.out.println(memberRepository.getWithRolesEqualLocal("test1@test.test"));
         System.out.println(memberRepository.getWithRolesEqualOAuth("test1@test.test", Type.LOCAL));
+
+    }
+
+    @Test
+    public void findByEmail(){
+        System.out.println(memberRepository.findByEmail("test2@test.com"));
     }
 
 }

@@ -23,13 +23,6 @@ import lombok.extern.log4j.Log4j2;
 @ControllerAdvice
 public class RestResponseExceptionHandler extends ResponseEntityExceptionHandler {
     Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-   /* @ResponseStatus(CONFLICT)
-    @ExceptionHandler(value = { DuplicateMemberException.class })
-    @ResponseBody
-    protected ErrorDto conflict(RuntimeException ex, WebRequest request) {
-
-        return new ErrorDto(timestamp,CONFLICT.value(),ex.getMessage(), request.getContextPath());
-    }*/
 
     @ResponseStatus(CONFLICT)
     @ExceptionHandler(value = { DuplicateMemberException.class })

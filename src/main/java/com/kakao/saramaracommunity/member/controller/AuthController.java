@@ -34,14 +34,6 @@ public class AuthController {
     // AuthenticationManagerBuilder 주입
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
-    // TokenDto 주입
-    // private final TokenDto jwt;
-
-    /*public AuthController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder) {
-        this.tokenProvider = tokenProvider;
-        this.authenticationManagerBuilder = authenticationManagerBuilder;
-    }*/
-
     @PostMapping("/authenticate")
     // LoginDto에 대응되는 값들을 POST 요청의 Body 로 받아서 TokenDto 에 작성한 값에 대응 되게 ResponseEntity<TokenDto> 를 반환하는 메서드
     public ResponseEntity<TokenDto> authorize(@Valid @RequestBody LoginDto loginDto) {

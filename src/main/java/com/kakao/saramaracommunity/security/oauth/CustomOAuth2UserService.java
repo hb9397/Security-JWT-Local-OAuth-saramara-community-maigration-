@@ -57,8 +57,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }
 
         // 가입되어 있으면 찾아오기
-        //Member authMember = existMember.get();
-        //createUser(userInfo, authType);
         return CustomOAuthUserDetails.create(authMember, oAuth2User.getAttributes());
     }
 

@@ -1,28 +1,23 @@
 package com.kakao.saramaracommunity.member.dto;
 
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kakao.saramaracommunity.member.entity.Type;
 import com.kakao.saramaracommunity.member.entity.Member;
-import com.kakao.saramaracommunity.member.entity.Role;
+import com.kakao.saramaracommunity.member.entity.Type;
+
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-
-// 인증, 인가에 대한 사용자의 정보를 반환할 때 사용하는 DTO
+// 회원가입, 회원정보 조회, 회원 정보 수정 시 사용되는 DTO
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
-public class SecurityMemberDto {
+public class MemberDto {
 
-	//private Long memberId;
 	@NotNull
 	@Size(max = 50)
 	private String email;
@@ -32,6 +27,7 @@ public class SecurityMemberDto {
 	@Size(min = 3, max = 100)
 	private String password;
 
+
 	@NotNull
 	@Size(min = 3, max = 50)
 	private String nickname;
@@ -40,6 +36,14 @@ public class SecurityMemberDto {
 
 	private Type type;
 
-	private Set<Role> role;
+	public static MemberDto from(Member memberEntity){
+		if(memberEntity == null) return null;
 
+		return MemberDto.builder()
+			.email(memberEntity.getEmail())
+			.nickname(memberEntity.getNickname())
+			.picture(memberEntity.getPicture())
+			.type(memberEntity.getType())
+			.build();
+	}
 }

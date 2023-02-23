@@ -48,7 +48,7 @@ public class Member extends BaseTimeEntity {
 
 
    // 회원이 정보를 수정, RefreshToken 재발급 등의 이유로 바뀔 수 있는 값들에 대한 처리
-   /*public void changeNickname(String nickname) {this.nickname = nickname;}
+   public void changeNickname(String nickname) {this.nickname = nickname;}
 
    public void changePassword(String password) {this.password = password;}
    public void changePicture(String profileImage) {this.picture = profileImage;}
@@ -57,23 +57,16 @@ public class Member extends BaseTimeEntity {
 
    public void setType(Type type) {this.type = type;}
 
-   public void setRefreshToken(String refreshToken) {this.refreshToken = refreshToken;}*/
+   public void setRefreshToken(String refreshToken) {this.refreshToken = refreshToken;}
 
    @Builder
-   public Member(Type type, String email, String nickname, String password, Set<Role> role, String picture) {
+   public Member(Type type, String nickname, String password, Set<Role> role, String picture) {
       this.type = type;
-      this.email = email;
+      //this.email = email;
       this.nickname = nickname;
       this.password = password;
       this.role = role;
       this.picture = picture;
-   }
-
-   public Member update(String email, String nickname, String picture) {
-      this.email = email;
-      this.nickname = nickname;
-      this.picture = picture;
-      return this;
    }
 
 }

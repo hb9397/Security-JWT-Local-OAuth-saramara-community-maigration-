@@ -61,21 +61,4 @@ public class CustomUserDetailsService implements UserDetailsService {
 
    }
 
-
-/*   private org.springframework.security.core.userdetails.User createUser(String username, UserEntity user) {
-      // 레포지토지토리 부터 받아온 DB 의 사용자의 정보를 가져와서 activate 되어 있지 않으면 예외를 발생 시키고
-      if (!user.isActivated()) {
-         throw new RuntimeException(username + " -> 활성화되어 있지 않습니다.");
-      }
-
-      // 정상적으로 사용자의 정보를 가져온 경우 사용자 정보에서 권한 정보를 가지고 Security 에서 권한을 인지하는데 사용되는 GrantedAuthority 객체를 생성
-      List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
-              .map(authority -> new SimpleGrantedAuthority(authority.getAuthorityName()))
-              .collect(Collectors.toList());
-
-      // 사용자 정보에서 사용자 이름, 비밀번호, 권한정보를 가지고  Spring Security 인가에 이용되는 userdetails.User 객체 반환
-      return new org.springframework.security.core.userdetails.User(user.getUsername(),
-              user.getPassword(),
-              grantedAuthorities);
-   }*/
 }
